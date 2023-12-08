@@ -1,0 +1,144 @@
+#!/bin/sh -e
+#
+# Upload the website on Sourceforge.net
+#
+# You will need to have an account with Sourceforge.net for this script to
+# work for you. Also, you'll have to change the user name in the scp commands.
+#
+# License:
+#      Zipios -- a small C++ library that provides easy access to .zip files.
+#
+#      Copyright (c) 2015-2022  Made to Order Software Corp.  All Rights Reserved
+#
+#      This library is free software; you can redistribute it and/or
+#      modify it under the terms of the GNU Lesser General Public
+#      License as published by the Free Software Foundation; either
+#      version 2.1 of the License, or (at your option) any later version.
+#
+#      This library is distributed in the hope that it will be useful,
+#      but WITHOUT ANY WARRANTY; without even the implied warranty of
+#      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#      Lesser General Public License for more details.
+#
+#      You should have received a copy of the GNU Lesser General Public
+#      License along with this library; if not, write to the Free Software
+#      Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+#
+
+echo "WARNING: I switch from HTTP to HTTPS since sourceforge now offers such."
+echo "         It could be that this script will not work without a few tweaks"
+echo "         once it takes (right now it still works with the HTTP... I'm not"
+echo "         sure whether it takes some time or I'm doing something wrong.)"
+
+. dev/version
+
+username=alexis_wilke
+help=false
+main=false
+documentation=false
+coverage=false
+while test ! -z "$1"
+do
+	case "$1" in
+	-h|--help)
+		help=true
+		shift
+		;;
+	-m|--main)
+		main=true
+		shift
+		;;
+	-d|--documentation)
+		documentation=true
+		shift
+		;;
+	-c|--coverage)
+		coverage=true
+		shift
+		;;
+	-u|--username)
+		shift
+		if test -z "$1"
+		then
+			echo "error: the --user command line option expects a parameter"
+			exit 1;
+		fi
+		username=$1
+		shift
+		;;
+	*)
+		echo "error: unknown command line option. Try --help."
+		exit 1;
+	esac
+done
+if $help
+then
+	echo "Usage: $0 [-opt]"
+	echo "where -opt is one or more of the following:"
+	echo "  -h | --help                print out this help screen"
+	echo "  -m | --main                transmit the main HTML files"
+	echo "  -d | --documentation       transmit the documentation if available"
+	echo "  -c | --coverage            transmit the coverage data if available"
+	echo "  -u | --username <name>     log in to sourceforge using that user name"
+	exit 1;
+fi
+
+# Copy the main files if --main was used
+if $main
+then
+	echo "Copy main files ($FULL_VERSION)"
+	scp doc/www/*.* $username@web.sourceforge.net:/home/project-web/zipios/htdocs/
+	scp -r doc/images $username@web.sourceforge.net:/home/project-web/zipios/htdocs/
+else
+	echo "Ignore main"
+fi
+
+# Copy the documentation if --documentation used and docs are available
+if $documentation
+then
+	DOCS=../BUILD/dist/share/doc/zipios
+	if test ! -d ${DOCS}/html
+	then
+		DOCS=../../../BUILD/dist/share/doc/zipios
+	fi
+	if test -d ${DOCS}/html
+	then
+		echo "Copy documentation ($VERSION)"
+		#
+		#   To keep a copy of each major.minor versions, we first
+		#   rename the HTML directory. Once done we restore the
+		#   directory name so one can run the process again.
+		#   (we should use a trap to make sure to restore the
+		#   name but well... this is a sloppy script anyway.)
+		#
+		mv ${DOCS}/html ${DOCS}/zipios-v$VERSION
+		scp -r ${DOCS}/zipios-v$VERSION $username@web.sourceforge.net:/home/project-web/zipios/htdocs/
+		mv ${DOCS}/zipios-v$VERSION ${DOCS}/html
+	else
+		echo "Documentation not available."
+	fi
+else
+	echo "Ignore documentation"
+fi
+
+# Copy the coverage data if --coverage used and such is available
+if $coverage
+then
+	if test -d ../BUILD/zipios_coverage_html
+	then
+		echo "Copy coverage ($FULL_VERSION)"
+		# Now copy the HTML data
+		# Note that we only keep the last version...
+		mkdir ../BUILD/coverage
+		mv ../BUILD/zipios_coverage_html ../BUILD/coverage/zipios-$FULL_VERSION
+		cp dev/index.php ../BUILD/coverage/.
+		scp -r ../BUILD/coverage $username@web.sourceforge.net:/home/project-web/zipios/htdocs/.
+		mv ../BUILD/coverage/zipios-$FULL_VERSION ../BUILD/zipios_coverage_html
+		rm -rf ../BUILD/coverage
+	else
+		echo "Coverage data not available."
+	fi
+else
+	echo "Ignore coverage"
+fi
+

@@ -1,0 +1,447 @@
+zipios (2.3.3.0~jammy) jammy; urgency=high
+
+  * Bump version since 2.3.2 is an official release.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Tue, 08 Aug 2023 21:11:58 -0700
+
+zipios (2.3.2.0~jammy) jammy; urgency=high
+
+  * Added support for an std::istream when creating a ZipFile object.
+  * Added support for a StreamEntry when creating a zip file.
+  * Added support -v (verbose) to the ./mk script.
+  * Fixed two `operator = ()` which improperly returned a `const &`.
+  * Replaced additional `new` with `std::make_shared/unique<>()`.
+  * Really auto-init `m_zs`.
+  * Use RAII for all files and directories in the tests.
+  * Fixed test verifying DOS timestamps with +/- 1 hour (ugly but it works).
+  * Bumped version in CMakeLists.txt.
+  * Added the --source-path to the zipios_tests call in mk.
+  * Added the zipdir tool to test creating zip files on the command line.
+  * Removed the -std=c++17 option. I don't need it and it's better without.
+  * Implemented the big endian version of the dosdatetime_convert_t union.
+  * Enhanced a zipfile test which was not testing the output except the CRC32.
+  * Fixed a bug when copying empty files, it would prevent further copying.
+  * Fixed the CRC32 computation. It was not reset between file entries.
+  * Added the snapcatch2 dependency to the control file.
+  * Updated the test main() function to use the snapcatch2 helps.
+  * Added a safe_dir implementation and make sure to cd to the tmp folder.
+  * Enhanced the test of the version (CMakeLists.txt & debian/changelog equal).
+  * Added a test of the library versus test versions.
+  * Fixed loop in the tests where the maximum value changed on each iteration.
+  * Many clean ups.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Wed, 28 Sep 2022 15:35:45 -0700
+
+zipios (2.3.1.1~bionic) bionic; urgency=high
+
+  * Updated the compat to v10.
+  * Clean up of CMakeLists.txt files.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Mon, 11 Jul 2022 06:46:25 -0700
+
+zipios (2.3.1.0~bionic) bionic; urgency=high
+
+  * Updated the tests to work with SnapCatch2 v3.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Mon, 31 Jan 2022 18:14:26 -0800
+
+zipios (2.3.0.0~bionic) bionic; urgency=high
+
+  * Added the clear() and empty() functions to the FilePath class.
+  * Correctly clear the m_checked flag on a change of the FilePath.
+  * Fixed a logical or (`||` instead of `|`).
+  * Use clear() instead of setting string to "".
+  * Replaced many `new ...` with `std::make_shared<>()`.
+  * Fixed a few comments (spelling/grammar, missing/invalid info.).
+  * Fixed missing CRC32 computation as presented in #38.
+  * Added a new test to make sure issue #38 was fixed.
+  * Added a function to compute CRC32 of local disk files.
+  * Made tests delete files upfront too (in case it breaks part way).
+  * Fixed path to BUILD folder in ./mk script.
+  * Added a test for the version (CMakelists.txt vs debian/changelog).
+  * Bumped copyright notice date to 2021.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Tue, 03 Nov 2020 07:16:34 -0800
+
+zipios (2.2.6.0~xenial) xenial; urgency=high
+
+  * Applied a few fixes to avoid some warnings when compiling in 32 bits.
+  * Commented out tests which verify dates outside of the 32 bit range
+    (i.e. time_t is a 32 bit signed integer on a 32 bit OS).
+  * Fixed the docs Bugs and Links and Issue Sections.
+  * Removed some ++ from Zipios because the name changed and we removed the ++.
+  * Applied most of pull request 30, added the metainfo.xml file.
+  * Applied pull request 34 (https://github.com/Zipios/Zipios/pull/34)
+    (remove path from all filenames)
+
+ -- Alexis Wilke <alexis@m2osw.com>  Tue, 15 Sep 2020 14:40:28 -0700
+
+zipios (2.2.5.0~xenial) xenial; urgency=high
+
+  * Applied pull request 31 (https://github.com/Zipios/Zipios/pull/31)
+    (corrections to comments as in spelling/grammar errors)
+
+ -- Alexis Wilke <alexis@m2osw.com>  Fri, 16 Aug 2019 17:12:28 -0800
+
+zipios (2.2.4.0~xenial) xenial; urgency=high
+
+  * Applied fix to some tests so they compile with g++ 8.3.x
+
+ -- Alexis Wilke <alexis@m2osw.com>  Fri, 19 Jul 2019 16:08:48 -0800
+
+zipios (2.2.3.0~xenial) xenial; urgency=high
+
+  * Added in=C++ to the MAPPING_EXTENSION.
+  * Updated the doxy file to 1.8.11.
+  * Removed one more UTF-8 emdash character.
+  * Made a few changes in link with the website and CVE-2019-13453 in the old
+    zipios library.
+  * Added a favicon for the website.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Tue, 11 Jun 2019 23:58:58 -0800
+
+zipios (2.2.2.0~xenial) xenial; urgency=high
+
+  * Fixed the FindCatch.cmake, the REQUIRED was not properly tested.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Mon, 10 Jun 2019 16:42:26 -0700
+
+zipios (2.2.1.0~xenial) xenial; urgency=high
+
+  * Fixed the "DirectoryEntry for a valid directory" test as the FileEntry
+    object saves a Unix timestamp as a time_t and therefore with a full
+    range precision. (#29)
+
+ -- Alexis Wilke <alexis@m2osw.com>  Wed, 24 Apr 2019 13:45:20 -0800
+
+zipios (2.2.0.0~xenial) xenial; urgency=high
+
+  * Replaced the dostime.h/c with dosdatetime.hpp/cpp to eliminate the GPL
+    dependency.
+  * Updated the tests accordingly.
+  * Fixed the dosdatetime test so it matches the hours properly (I was able to
+    remove the 1h difference test to accomodate standard/saving time periods.)
+  * Made enhancements to the `mk` script so I can use it in zipios or Snap C++.
+  * Updated copyright notices to say 2019.
+  * Fixed the debian/copyright file.
+  * I removed the UTF-8 long dashes and replace them with "--".
+  * I updated the version in the main CMakeFile.txt.
+  * I applied cleanups as detected by the code analyzis tools.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Tue,  9 Apr 2019 19:40:36 -0800
+
+zipios (2.1.7.11~xenial) xenial; urgency=high
+
+  * Include a fix that allows for catch v2 to be used for our tests.
+  * Fixed version in CMakeLists.txt as well.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Sat,  1 Dec 2018 16:50:51 -0800
+
+zipios (2.1.7.10~xenial) xenial; urgency=high
+
+  * Bump version to get a recompile on launchpad.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Fri, 27 Jul 2018 00:45:54 -0800
+
+zipios (2.1.7.9~xenial) xenial; urgency=high
+
+  * Bump version to recompile without the -fsanitizer flags.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Wed, 27 Jun 2018 19:46:10 -0800
+
+zipios (2.1.7.8~xenial) xenial; urgency=high
+
+  * Bump version to recompile with the -fsanitizer flags.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Tue, 26 Jun 2018 20:03:27 -0800
+
+zipios (2.1.7.7~xenial) xenial; urgency=high
+
+  * Testing dput from make requires all changelog to have my email address.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Mon, 29 Jan 2018 00:42:44 -0700
+
+zipios (2.1.7.6~xenial) xenial; urgency=high
+
+  * Fixed packaging to use DEB_HOST_MULTIARCH for library.
+
+ -- R. Douglas Barbieri <doug@dooglio.net>  Thu, 26 Oct 2017 14:02:00 -0700
+
+zipios (2.1.7.1~xenial) xenial; urgency=high
+
+  * Packaging: Tests require zip package.
+  * Packaging: Install targets were not correct.
+  * Packaging: Distributing better cmake module in correct area.
+
+ -- R. Douglas Barbieri <doug@dooglio.net>  Wed, 18 Oct 2017 09:22:57 -0700
+
+zipios (2.1.7.0~xenial) xenial; urgency=high
+
+  * Packaging now puts all libraries and softlinks in the same folder.
+
+ -- Doug Barbieri <doug@dooglio.net>  Fri, 23 Jun 2017 18:18:09 -0700
+
+zipios (2.1.6.0~xenial) xenial; urgency=high
+
+  * SNAP-289: added a couple of try/catch in destructors to avoid potential
+    std::terminate() calls when an error is discovered in a compressed file.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Sun, 19 Mar 2017 22:02:22 -0700
+
+zipios (2.1.5.0~xenial) xenial; urgency=high
+
+  * Applied fix using lambda for throwing constructors in our tests.
+    (Reference https://github.com/Zipios/Zipios/issues/5)
+  * Updated the README.md to include instructions on how to install each
+    dependency.
+  * Fixed the FindCatch.cmake for Fedora, the catch.hpp is in a sub-folder.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Sun, 19 Feb 2017 22:02:22 -0700
+
+zipios (2.1.4.0~xenial) xenial; urgency=high
+
+  * Replaced readdir_r() with readdir().
+  * Removed a throw from a destructor, which g++ now reports with a warning.
+  * Fixed a few more "occurred".
+  * Moved dependencies, one per line.
+  * Fixed position of some vim comments.
+  * Bumped copyright notices to 2017.
+  * Fixed several return false which needed to be return node::pointer_t().
+  * Fixed a few if(!<pointer>) which should be != or == nullptr.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Sun, 19 Feb 2017 22:02:22 -0700
+
+zipios (2.1.3.0~xenial) xenial; urgency=high
+
+  * SNAP-110: Bumped version to get my test system to upgrade properly.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Tue, 13 Sep 2016 11:59:22 -0700
+
+zipios (2.1.1~trusty) trusty; urgency=high
+
+  * Fixed a couple of classes initializations that were missing.
+  * Fixed a view system() call of which return values were not checked.
+  * Added a BUILD_ZIPIOS_TESTS cmake option flag.
+  * Fixed reference to README as README.md as it is called now.
+  * Allow for ZIPIOS_WINDOWS to compile under MS-Windows.
+  * Added an ssize_t definition for Windows.
+  * Removed the "catch_" prefix from all test names.
+  * Fixed some copyright notices.
+  * Cleaned up the coverage script.
+  * Added the BUILD_SHARED_LIBS and BUILD_DOCUMENTATION options to cmake.
+  * Fixed the FindZipIos.cmake file so it uses the correct names.
+  * Also make the destination directory for FindZipIos.cmake a variable.
+  * Enhanced the installation directory handling in cmake.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Sat, 12 Dec 2015 14:41:42 -0700
+
+zipios (2.1.0~trusty) trusty; urgency=high
+
+  * Renamed the include directory to remove the '++'.
+  * Renamed the Debian package "zipios".
+  * Added a few scripts to help with publishing a new version of Zipios.
+  * Fixed and added some copyright notices.
+  * Fixed the comments in the cmake/* files.
+  * Fixed name of zipios_tool as just zipios once installed.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Tue,  5 May 2015 14:20:07 -0700
+
+zipios (2.0.2~trusty) trusty; urgency=high
+
+  * Finished fixing the vim/emacs comments.
+  * Removed some unnecessary code (a try/catch).
+  * Various small fixes to allow FreeBSD to pass all the tests.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Sat, 21 Mar 2015 18:28:33 -0700
+
+zipios (2.0.1~trusty) trusty; urgency=high
+
+  * Removed the unused tests.
+  * Applied a couple fixes to get cygwin to work as expected.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Sat, 21 Mar 2015 18:28:33 -0700
+
+zipios (2.0.0~trusty) trusty; urgency=high
+
+  * Moving to the new 2.X version.
+  * Lots of updates and upgrades from Alexis, since he came on as the new lead.
+  * Brand new set of tests with 100% coverage of the core library.
+
+ -- R. Douglas Barbieri <doug@dooglio.net>  Tue, 3 Mar 2015 08:37:31 -0700
+
+zipios (0.1.5.10m2osw1~saucy) saucy; urgency=high
+
+  * Added dostime.h/c and new methods that allow for conversion between
+    dostime and unixtime.
+
+ -- R. Douglas Barbieri <doug@dooglio.net>  Mon, 24 Mar 2014 19:17:19 -0700
+
+zipios (0.1.5.9+cvs.2007.04.28-5.1.m2osw4~saucy) saucy; urgency=high
+
+  * Control file had the wrong dependency for dev package.
+
+ -- R. Douglas Barbieri <doug@dooglio.net>  Thu, 20 Mar 2014 09:55:07 -0700
+
+zipios (0.1.5.9+cvs.2007.04.28-5.1.m2osw3~saucy) saucy; urgency=high
+
+  * Corrected package install specs.
+  * Main package is now renamed.
+
+ -- R. Douglas Barbieri <doug@dooglio.net>  Thu, 20 Mar 2014 09:18:20 -0700
+
+zipios (0.1.5.9+cvs.2007.04.28-5.1.m2osw2~saucy) saucy; urgency=high
+
+  * Forgot to include cmake in the build dependencies.
+
+ -- R. Douglas Barbieri <doug@dooglio.net>  Wed, 19 Mar 2014 19:08:49 -0700
+
+zipios (0.1.5.9+cvs.2007.04.28-5.1.m2osw1~saucy) saucy; urgency=high
+
+  * Fixed bug with zipfile.cpp, where getNextEntry() is called in the
+  getInputStream() method, which does not need to happen, and in fact, causes
+  the last file in the archive to not be read, and an exception to be thrown.
+
+ -- R. Douglas Barbieri <doug@dooglio.net>  Wed, 19 Mar 2014 18:28:50 -0700
+
+zipios (0.1.5.9+cvs.2007.04.28-5.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Fix "zipios++: FTBFS: directory.h:85:12: error: 'ptrdiff_t' does not
+    name a type": apply patch from Ubuntu / Julian Taylor:
+    - debian/patches/03_ptrdiff.dpatch:
+      include cstddef to fix build issue with gcc 4.6
+    Closes: #625096
+    LP: #832775
+
+ -- gregor herrmann <gregoa@debian.org>  Sat, 08 Oct 2011 14:52:37 +0200
+
+zipios (0.1.5.9+cvs.2007.04.28-5) unstable; urgency=low
+
+  * Bumped to Standards-Version: 3.8.0.
+  * Use DESTDIR instead of prefix for doc install, thanks Ben
+    Hutchings - closes: #471338
+  * Better handling of stream reading errors, thanks Fernando Diaz
+    Alonso - closes: #395350
+
+ -- Masayuki Hatta (mhatta) <mhatta@debian.org>  Fri, 18 Jul 2008 00:44:54 +0900
+
+zipios (0.1.5.9+cvs.2007.04.28-4) unstable; urgency=low
+
+  * Added graphicsmagick-imagemagick-compat to Build-Depends.
+    Thanks to Anibal Avelar - closes: #456349
+
+ -- Masayuki Hatta (mhatta) <mhatta@debian.org>  Wed, 02 Jan 2008 23:35:44 +0900
+
+zipios (0.1.5.9+cvs.2007.04.28-3) unstable; urgency=low
+
+  * Bumped to Standards-Version: 3.7.3.
+  * Fixed various lintian warnings.
+  * Now provides libzipios++-doc and manpages in libzipios++-dev
+    - closes: #288863
+
+ -- Masayuki Hatta (mhatta) <mhatta@debian.org>  Sun, 09 Dec 2007 06:33:47 +0900
+
+zipios (0.1.5.9+cvs.2007.04.28-2) unstable; urgency=low
+
+  * Fix for amd64 in -1 was incomplete.  Now fixed.
+  * src/zipinputstreambuf.cpp : Backported from the previous revision.
+  The changes made in the upstream breaks enigma's score reading - closes: #421498
+
+ -- Masayuki Hatta (mhatta) <mhatta@debian.org>  Mon, 30 Apr 2007 10:21:50 +0900
+
+zipios (0.1.5.9+cvs.2007.04.28-1) unstable; urgency=low
+
+  * New upstream release (CVS snapshot).
+  * Acknowledged NMU - closes: #372679
+  * libzipios++-dev now depends on libz-dev - closes: #358721
+  * Fixed build issue for forthcoming GCC 4.3 - closes: #417788
+  * Fixed FSF's address.
+
+ -- Masayuki Hatta (mhatta) <mhatta@debian.org>  Sat, 28 Apr 2007 02:11:43 +0900
+
+zipios (0.1.5.9+cvs.2004.02.07-3.4) unstable; urgency=high
+
+  * Non-maintainer upload.
+  * Ship an empty zipios-config.h, since it isn't good to have stuff like
+    HAVE_ macros or (more importantly) PACKAGE and VERSION leak into other
+    package's namespaces. Instead, the few #ifdefs in the headers that
+    actually used these macros have been resolved manually in the source,
+    as they are consistent across all Debian systems and not likely to change
+    in the near future. (Closes: #363173)
+
+ -- Steinar H. Gunderson <sesse@debian.org>  Sun, 11 Jun 2006 00:46:57 +0200
+
+zipios (0.1.5.9+cvs.2004.02.07-3.3) unstable; urgency=high
+
+  * Non-maintainer upload.
+  * Rename to libzipios++0c2a for libstdc++ allocator change (Closes: #339280).
+
+ -- Luk Claes <luk@debian.org>  Mon,  2 Jan 2006 19:26:45 +0100
+
+zipios (0.1.5.9+cvs.2004.02.07-3.2) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Build depend on libcppunit-dev. (Closes: #288819).
+
+ -- Luk Claes <luk@debian.org>  Mon, 17 Oct 2005 17:56:52 +0200
+
+zipios (0.1.5.9+cvs.2004.02.07-3.1) unstable; urgency=low
+
+  * NMU
+  * gcc4 transition, renamed libzipios++0c102 to libzipios++0,
+    not waiting for cppunit to be transitioned, since the tests built
+    with it are not shipped nor executed at build-time.
+  * Fix crash in amd64, closes: #314602
+
+ -- Isaac Clerencia <isaac@debian.org>  Mon, 18 Jul 2005 23:50:27 +0200
+
+zipios (0.1.5.9+cvs.2004.02.07-3) unstable; urgency=low
+
+  * Added missing zipios-config.h - closes: #232097
+
+ -- Masayuki Hatta (mhatta) <mhatta@debian.org>  Wed, 11 Feb 2004 08:59:21 +0900
+
+zipios (0.1.5.9+cvs.2004.02.07-2) unstable; urgency=low
+
+  * [control] changed Maintainer field.
+
+ -- Masayuki Hatta (mhatta) <mhatta@debian.org>  Sun,  8 Feb 2004 01:28:47 +0900
+
+zipios (0.1.5.9+cvs.2004.02.07-1) unstable; urgency=low
+
+  * New upstream release (CVS snapshot).
+  * Bumped Standards-Version to 3.6.1.
+
+ -- Masayuki Hatta (mhatta) <mhatta@debian.org>  Sat,  7 Feb 2004 16:47:39 +0900
+
+zipios (0.1.5+cvs.2003.03.18-1) unstable; urgency=low
+
+  * New upstream release (CVS snapshot).
+  * Added Build-Depends: automake1.7 - closes: #178638
+
+ -- Masayuki Hatta <mhatta@debian.org>  Tue, 18 Mar 2003 10:51:25 +0900
+
+zipios (0.1.5+cvs.2003.01.14-1) unstable; urgency=low
+
+  * New upstream release (CVS snapshot).
+  * GCC 3.2 Transition begins.  Now it's called libzipios++0c102.
+  * Now can be built with GCC 3.2 (Thanks Ross Burton for notifying me) - closes: #166745
+  * Prepared source with the latest libtool - closes: #176499
+  * Bumped Standards-Version to 3.5.8.
+
+ -- Masayuki Hatta <mhatta@debian.org>  Tue, 14 Jan 2003 16:51:29 +0900
+
+zipios (0.1.5+cvs.2002.11.22-1) unstable; urgency=low
+
+  * New upstream release (CVS snapshot)
+  * Applied patched from FreeBSD people - closes: #156424, #166741
+
+ -- Masayuki Hatta <mhatta@debian.org>  Fri, 22 Nov 2002 11:50:35 +0900
+
+zipios (0.1.5+cvs.2002.08.10-1) unstable; urgency=low
+
+  * Initial Release - closes: #156131
+  * Uses CVS snapshot, since the original 0.1.5 doesn't support shared
+    library.
+
+ -- Masayuki Hatta <mhatta@debian.org>  Sat, 10 Aug 2002 10:01:42 +0900

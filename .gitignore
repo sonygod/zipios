@@ -1,0 +1,9 @@
+tmp
+*~
+*.sw?
+/.idea/
+/cmake-build-*/
+seed.txt
+tree*
+/build
+/

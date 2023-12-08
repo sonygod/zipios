@@ -1,0 +1,53 @@
+#!/bin/sh -e
+#
+# Retrieve the project version from the main CMakeLists.txt file
+#
+# License:
+#      Zipios -- a small C++ library that provides easy access to .zip files.
+#
+#      Copyright (c) 2015-2022  Made to Order Software Corp.  All Rights Reserved
+#
+#      This library is free software; you can redistribute it and/or
+#      modify it under the terms of the GNU Lesser General Public
+#      License as published by the Free Software Foundation; either
+#      version 2.1 of the License, or (at your option) any later version.
+#
+#      This library is distributed in the hope that it will be useful,
+#      but WITHOUT ANY WARRANTY; without even the implied warranty of
+#      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#      Lesser General Public License for more details.
+#
+#      You should have received a copy of the GNU Lesser General Public
+#      License along with this library; if not, write to the Free Software
+#      Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+#
+
+if test ! -f CMakeLists.txt -o ! -f debian/changelog
+then
+	echo "error: can't find CMakeLists.txt or debian/changelog to extract version information."
+	exit 1
+fi
+
+MAJOR=`grep 'set( ZIPIOS_VERSION_MAJOR ' CMakeLists.txt | sed -e 's/.*ZIPIOS_VERSION_MAJOR //' -e 's/ .*//'`
+MINOR=`grep 'set( ZIPIOS_VERSION_MINOR ' CMakeLists.txt | sed -e 's/.*ZIPIOS_VERSION_MINOR //' -e 's/ .*//'`
+PATCH=`grep 'set( ZIPIOS_VERSION_PATCH ' CMakeLists.txt | sed -e 's/.*ZIPIOS_VERSION_PATCH //' -e 's/ .*//'`
+BUILD=`grep 'set( ZIPIOS_VERSION_BUILD ' CMakeLists.txt | sed -e 's/.*ZIPIOS_VERSION_BUILD //' -e 's/ .*//'`
+
+VERSION=${MAJOR}.${MINOR}
+FULL_VERSION=${MAJOR}.${MINOR}.${PATCH}
+COMPLETE_VERSION=${MAJOR}.${MINOR}.${PATCH}.${BUILD}
+
+# To verify, make sure the version in the changelog matches
+CHANGELOG_VERSION=`sed -n -e 1p debian/changelog | sed -e 's/.*(//' -e 's/\~.*//'`
+
+#echo $FULL_VERSION
+#echo $COMPLETE_VERSION
+#echo $CHANGELOG_VERSION
+
+if test "$COMPLETE_VERSION" != "$CHANGELOG_VERSION"
+then
+	echo "error: complete version from CMakeLists.txt is $COMPLETE_VERSION, version in changelog is $CHANGELOG_VERSION"
+	exit 1
+fi
+
+

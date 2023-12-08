@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Zipios</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="shortcut icon" type="image/x-icon" href="/snap-favicon.ico">
+	<style>
+		body
+		{
+			margin: 0;
+			height: 100%;
+			background: linear-gradient(to bottom, #f8f8f8, #f8f8f8 90%, #bbbbbb) repeat fixed 0 0 #f8f8f8;
+			font-family: sans-serif;
+		}
+		div
+		{
+			margin: 0;
+		}
+		ul.menu
+		{
+			margin: 0;
+			padding: 0;
+			text-align: center;
+		}
+		ul.menu li
+		{
+			display: inline;
+			list-style: none;
+			margin: 5px 0 0 20px;
+			float: left;
+			border: 1px solid #0000ff;
+			border-radius: 5px;
+			padding: 0;
+			background-color: #9d9ddf;
+			background: linear-gradient(to bottom, #bbbbdf, #9898df 60%, #8080df) repeat scroll 0 0 #9d9ddf;
+		}
+		ul.menu li.no-button
+		{
+			border: none;
+			background: none;
+			margin-top: 0;
+		}
+		ul.menu li a
+		{
+			display: block;
+			padding: 5px 10px;
+			text-decoration: none;
+			color: white;
+		}
+		div.header
+		{
+			padding: 10px;
+			background: white;
+			border-bottom: 1px solid black;
+		}
+		div.page
+		{
+			border-top: 1px solid #666666;
+			padding: 20px;
+		}
+	</style>
+</head>
+<body>
+<div class="header">
+	<ul class="menu">
+		<li class="no-button"><a href="/" title="Zipios Home Page"><img src="/images/zipios.jpg" style="width: auto; height: 40px;"/></a></li>
+		<li><a href="http://zipios.sourceforge.net/" title="Home page of the Zipios library">Zipios</a></li>
+		<li><a href="/zipios-v2.2/" title="Documentation of the most current version of Zipios">Documentation</a></li>
+		<li><a href="https://github.com/Zipios/Zipios/issues" title="Get support for the Zipios library">Support</a></li>
+		<li><a href="https://github.com/Zipios/Zipios" title="Source code of the Zipios 2.x library">Source Code (v2.x)</a></li>
+		<li><a href="https://sourceforge.net/p/zipios/news/" title="Latest news of the Zipios library">News</a></li>
+		<li><strong><a href="https://sourceforge.net/projects/zipios/files/" title="Download the latest published Zipios tarballs (source and documentation)">Download</a></strong></li>
+	</ul>
+	<div style="clear: both;"></div>
+</div>
+<div class="page">
+	<p>
+		We are slowly working on getting a new website going for Zipios.
+		The main idea is that we want to be able to upload some more pages
+		than just the documentation. Not only that, we want to support
+		having more than one version of the documentation.
+	</p>
+	<ul>
+		<li><a href="/zipios-v2.2/">Documentation of version 2.2 of the Zipios library</a></li>
+		<li><a href="/zipios-v2.1/">Documentation of version 2.1 of the Zipios library</a></li>
+		<li><a href="/zipios-v2.0/">Documentation of version 2.0 of the Zipios library</a></li>
+		<li><a href="/coverage/">Test Coverage Information (version 2.x only)</a></li>
+		<li><a href="/zipios-v0.1/">Documentation of version 0.1 of the Zipios library</a></li>
+	</ul>
+	<h2>Binary Packages</h2>
+	<p>
+		We create a Debian compatible package on Launchpad. This
+		can be found here:
+		<a href="https://launchpad.net/~snapcpp/+archive/ubuntu/ppa/+packages">Zipios and other Snap! C++ packages</a>.
+	</p>
+	<p>
+		Note: the list of packages includes many others that are
+		used with <a href="https://snapwebsites.org/">Snap! C++</a>.
+		Zipios is likely to be the one at the bottom. Click on the
+		name and it should open with a list of packages you can
+		download. You should also be able to install that package
+		repository with APT and then simply use
+		`apt-get install libzipios` and
+		`apt-get install libzipios-dev` as may be required by your
+		environment. The documentation can be retrieved with
+		`apt-get install libzipios-doc`.
+	</p>
+	<h2>Running the unit tests (v2.x)</h2>
+	<p>
+		Testing on various systesm, I determined that to all the unit
+		tests in one go, you need about 50Mb of memory. The fact is
+		that some tests create zip files in memory. The library used
+		by itself would require very little in comparison unless
+		you load a large number of files and keep them in memory.
+	</p>
+	<p>
+		A computer with 512Mb of RAM is enough to run the tests
+		although I suggest at least 1Gb. One processor is enough
+		since we do not offer a multithreaded version of the tests.
+		However, since we use cmake, you can compile using any
+		number of processors and that will make it a lot faster.
+		(i.e. use the <code>-j</code> command line option with make
+		to compile multiple source files at once, as in
+		<code>make -j16 -C BUILD</code>; it is very fast anyway.)
+	</p>
+	<h2>CVE-2019-13453</h2>
+	<p>
+		Mike Salvadore found a bug in version 0.1.5 where a loop
+		would never check for the end of the file flag or any
+		other I/O error. As a result the loop would become infinite
+		when that happened (which it could if you were to pass an
+		invalid Zip file as input.)
+	</p>
+	<p>
+		Mike offered a patch, which I ameliorated a bit (a second
+		loop was also affected) and got report
+		<a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-13453">CVE-2019-13453</a>
+		as a result.
+	</p>
+	<p>
+		The patch info are in file infinite_loop.patch and version
+		0.1.7 is the new official version with that patch included
+		in it.
+	</p>
+	<p>
+		<b>WARNING:</b> sourceforge.net does not offer a way to
+		edit the CVS so the newest version is in the GIT repository
+		instead. Make sure to switch to the GIT repository if you
+		are directly using the source. Otherwise, just switch to
+		the newer tarball version (0.1.7).
+	</p>
+</div>
+<footer style="margin: 0 20px; padding-bottom: 50px; border-top: 1px solid #ccc;">
+	<p style="font-size: 90%; font-style: italic; padding-left: 10px;">
+		Copyright (c) 2000-2007 Thomas Sondergaard, All Rights Reserved.<br/>
+		Copyright (c) 2015-2019 <a href="https://www.m2osw.com/">Made to Order Software Corporation</a>, All Rights Reserved.
+	</p>
+</footer>
+</body>
+</html>
